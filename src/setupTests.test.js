@@ -4,7 +4,7 @@
 // learn more: https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom/extend-expect";
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
 import Carousel from "./Carousel";
 import Card from "./Card";
 
@@ -22,4 +22,16 @@ it("matches snapshot", () => {
 it("matches snapshot", () => {
 	const { asFragment } = render(<Card />);
 	expect(asFragment()).toMatchSnapshot();
+});
+it("should go to previous image when clicking left arrow", () => {
+	const { getByTestId, debug, getByText } = render(<Carousel />);
+	const prevBtn = getByTestId("left-arrow");
+	const nextBtn = getByTestId("right-arrow");
+
+	const counter = getByText("Image 1 of 3.");
+	fireEvent.click(nextBtn);
+	expect(counter).toHaveTextContent("2 of 3");
+
+	fireEvent.click(prevBtn);
+	expect(counter).toHaveTextContent("1 of 3");
 });
