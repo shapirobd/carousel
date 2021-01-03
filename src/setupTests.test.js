@@ -25,13 +25,28 @@ it("matches snapshot", () => {
 });
 it("should go to previous image when clicking left arrow", () => {
 	const { getByTestId, debug, getByText } = render(<Carousel />);
-	const prevBtn = getByTestId("left-arrow");
 	const nextBtn = getByTestId("right-arrow");
 
 	const counter = getByText("Image 1 of 3.");
 	fireEvent.click(nextBtn);
 	expect(counter).toHaveTextContent("2 of 3");
 
+	const prevBtn = getByTestId("left-arrow");
 	fireEvent.click(prevBtn);
 	expect(counter).toHaveTextContent("1 of 3");
+});
+
+it("should not show left arrow on first image", () => {
+	const { queryByTestId } = render(<Carousel />);
+	const prevBtn = queryByTestId("left-arrow");
+	expect(prevBtn).toBe(null);
+});
+
+it("should not show right arrow on last image", () => {
+	const { queryByTestId } = render(<Carousel />);
+	const nextBtn = queryByTestId("right-arrow");
+	fireEvent.click(nextBtn);
+	fireEvent.click(nextBtn);
+	const missingNextBtn = queryByTestId("right-arrow");
+	expect(missingNextBtn).toBe(null);
 });
